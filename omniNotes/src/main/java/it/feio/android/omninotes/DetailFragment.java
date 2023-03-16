@@ -458,51 +458,17 @@ public class DetailFragment extends BaseFragment implements OnReminderPickedList
     Intent i = mainActivity.getIntent();
 
     if (IntentChecker.checkAction(i, ACTION_MERGE)) {
-      noteOriginal = new Note();
-      note = new Note(noteOriginal);
-      noteTmp = getArguments().getParcelable(INTENT_NOTE);
-      if (i.getStringArrayListExtra("merged_notes") != null) {
-        mergedNotesIds = i.getStringArrayListExtra("merged_notes");
-      }
+      handleMergeActionIntent(i);
     }
 
     // Action called from home shortcut
     if (IntentChecker.checkAction(i, ACTION_SHORTCUT, ACTION_NOTIFICATION_CLICK)) {
-      afterSavedReturnsToList = false;
-      noteOriginal = DbHelper.getInstance().getNote(i.getLongExtra(INTENT_KEY, 0));
-      // Checks if the note pointed from the shortcut has been deleted
-      try {
-        note = new Note(noteOriginal);
-        noteTmp = new Note(noteOriginal);
-      } catch (NullPointerException e) {
-        mainActivity.showToast(getText(R.string.shortcut_note_deleted), Toast.LENGTH_LONG);
-        mainActivity.finish();
-      }
+      handleShortcutActionIntent(i);
     }
 
     // Check if is launched from a widget
     if (IntentChecker.checkAction(i, ACTION_WIDGET, ACTION_WIDGET_TAKE_PHOTO)) {
-
-      afterSavedReturnsToList = false;
-      showKeyboard = true;
-
-      //  with tags to set tag
-      if (i.hasExtra(INTENT_WIDGET)) {
-        String widgetId = i.getExtras().get(INTENT_WIDGET).toString();
-        String sqlCondition = Prefs.getString(PREF_WIDGET_PREFIX + widgetId, "");
-        String categoryId = TextHelper.checkIntentCategory(sqlCondition);
-        if (categoryId != null) {
-          Category category;
-          try {
-            category = DbHelper.getInstance().getCategory(parseLong(categoryId));
-            noteTmp = new Note();
-            noteTmp.setCategory(category);
-          } catch (NumberFormatException e) {
-            LogDelegate.e("Category with not-numeric value!", e);
-          }
-        }
-      }
-
+      handleWidgetActionIntent(i);
       // Sub-action is to take a photo
       if (IntentChecker.checkAction(i, ACTION_WIDGET_TAKE_PHOTO)) {
         takePhoto();
@@ -517,27 +483,7 @@ public class DetailFragment extends BaseFragment implements OnReminderPickedList
     if (IntentChecker
         .checkAction(i, Intent.ACTION_SEND, Intent.ACTION_SEND_MULTIPLE, INTENT_GOOGLE_NOW)
         && i.getType() != null) {
-
-      afterSavedReturnsToList = false;
-
-      if (noteTmp == null) {
-        noteTmp = new Note();
-      }
-
-      // Text title
-      String title = i.getStringExtra(Intent.EXTRA_SUBJECT);
-      if (title != null) {
-        noteTmp.setTitle(title);
-      }
-
-      // Text content
-      String content = i.getStringExtra(Intent.EXTRA_TEXT);
-      if (content != null) {
-        noteTmp.setContent(content);
-      }
-
-      importAttachments(i);
-
+        handleSendActionIntent(i);
     }
 
     if (IntentChecker
@@ -548,6 +494,73 @@ public class DetailFragment extends BaseFragment implements OnReminderPickedList
 
     i.setAction(null);
   }
+
+  private void handleMergeActionIntent(Intent i) {
+    noteOriginal = new Note();
+    note = new Note(noteOriginal);
+    noteTmp = getArguments().getParcelable(INTENT_NOTE);
+    if (i.getStringArrayListExtra("merged_notes") != null) {
+      mergedNotesIds = i.getStringArrayListExtra("merged_notes");
+    }
+  }
+
+  private void handleShortcutActionIntent(Intent i) {
+    afterSavedReturnsToList = false;
+    noteOriginal = DbHelper.getInstance().getNote(i.getLongExtra(INTENT_KEY, 0));
+    // Checks if the note pointed from the shortcut has been deleted
+    try {
+      note = new Note(noteOriginal);
+      noteTmp = new Note(noteOriginal);
+    } catch (NullPointerException e) {
+      mainActivity.showToast(getText(R.string.shortcut_note_deleted), Toast.LENGTH_LONG);
+      mainActivity.finish();
+    }
+  }
+
+  private void handleWidgetActionIntent(Intent i) {
+    afterSavedReturnsToList = false;
+    showKeyboard = true;
+
+    //  with tags to set tag
+    if (i.hasExtra(INTENT_WIDGET)) {
+      String widgetId = i.getExtras().get(INTENT_WIDGET).toString();
+      String sqlCondition = Prefs.getString(PREF_WIDGET_PREFIX + widgetId, "");
+      String categoryId = TextHelper.checkIntentCategory(sqlCondition);
+      if (categoryId != null) {
+        Category category;
+        try {
+          category = DbHelper.getInstance().getCategory(parseLong(categoryId));
+          noteTmp = new Note();
+          noteTmp.setCategory(category);
+        } catch (NumberFormatException e) {
+          LogDelegate.e("Category with not-numeric value!", e);
+        }
+      }
+    }
+  }
+
+  private void handleSendActionIntent(Intent i) {
+    afterSavedReturnsToList = false;
+
+    if (noteTmp == null) {
+      noteTmp = new Note();
+    }
+
+    // Text title
+    String title = i.getStringExtra(Intent.EXTRA_SUBJECT);
+    if (title != null) {
+      noteTmp.setTitle(title);
+    }
+
+    // Text content
+    String content = i.getStringExtra(Intent.EXTRA_TEXT);
+    if (content != null) {
+      noteTmp.setContent(content);
+    }
+
+    importAttachments(i);
+  }
+
 
   private void importAttachments(Intent i) {
 

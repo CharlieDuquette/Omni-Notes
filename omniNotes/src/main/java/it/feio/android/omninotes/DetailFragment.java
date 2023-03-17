@@ -1494,7 +1494,7 @@ public class DetailFragment extends BaseFragment implements OnReminderPickedList
         .content(R.string.delete_note_confirmation)
         .positiveText(R.string.ok)
         .onPositive((dialog, which) -> {
-          mainActivity.deleteNote(noteTmp);
+          noteActivity.deleteNote(noteTmp);
           LogDelegate.d("Deleted note with ID '" + noteTmp.get_id() + "'");
           mainActivity.showMessage(R.string.note_deleted, ONStyle.ALERT);
           goHome();
@@ -1628,7 +1628,7 @@ public class DetailFragment extends BaseFragment implements OnReminderPickedList
     Note sharedNote = new Note(noteTmp);
     sharedNote.setTitle(getNoteTitle());
     sharedNote.setContent(getNoteContent());
-    mainActivity.shareNote(sharedNote);
+    nodeActivity.shareNote(sharedNote);
   }
 
   /**

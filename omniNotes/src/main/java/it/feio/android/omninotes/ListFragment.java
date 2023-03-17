@@ -1723,7 +1723,7 @@ public class ListFragment extends BaseFragment implements OnViewTouchedListener,
   private void share() {
     // Only one note should be selected to perform sharing but they'll be cycled anyhow
     for (final Note note : getSelectedNotes()) {
-      mainActivity.shareNote(note);
+      noteActivity.shareNote(note);
     }
 
     getSelectedNotes().clear();

@@ -51,35 +51,22 @@ public class NoteViewHolder extends ViewHolder {
 
     if (expandedView) {
       NoteLayoutExpandedBinding binding = NoteLayoutExpandedBinding.bind(view);
-      root = binding.root;
-      cardLayout = binding.cardLayout;
-      categoryMarker = binding.categoryMarker;
-      title = binding.noteTitle;
-      content = binding.noteContent;
-      date = binding.noteDate;
-      archiveIcon = binding.archivedIcon;
-      locationIcon = binding.locationIcon;
-      alarmIcon = binding.alarmIcon;
-      lockedIcon = binding.lockedIcon;
       attachmentThumbnail = binding.attachmentThumbnail;
-      lockedIcon = binding.lockedIcon;
-      lockedIcon = binding.lockedIcon;
     } else {
       NoteLayoutBinding binding = NoteLayoutBinding.bind(view);
-      root = binding.root;
-      cardLayout = binding.cardLayout;
-      categoryMarker = binding.categoryMarker;
-      title = binding.noteTitle;
-      content = binding.noteContent;
-      date = binding.noteDate;
-      archiveIcon = binding.archivedIcon;
-      locationIcon = binding.locationIcon;
-      alarmIcon = binding.alarmIcon;
-      lockedIcon = binding.lockedIcon;
       attachmentIcon = binding.attachmentIcon;
-      lockedIcon = binding.lockedIcon;
-      lockedIcon = binding.lockedIcon;
     }
+
+    root = binding.root;
+    cardLayout = binding.cardLayout;
+    categoryMarker = binding.categoryMarker;
+    title = binding.noteTitle;
+    content = binding.noteContent;
+    date = binding.noteDate;
+    archiveIcon = binding.archivedIcon;
+    locationIcon = binding.locationIcon;
+    alarmIcon = binding.alarmIcon;
+    lockedIcon = binding.lockedIcon;
 
   }
 

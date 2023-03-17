@@ -96,9 +96,8 @@ public class OmniNotes extends MultiDexApplication {
     LanguageHelper.updateLanguage(this, language);
   }
 
-  public AnalyticsHelper getAnalyticsHelper() {
-    if (analyticsHelper == null) {
-      boolean enableAnalytics = Prefs.getBoolean(PREF_SEND_ANALYTICS, true);
+  public setAnalyticsHelper() {
+    boolean enableAnalytics = Prefs.getBoolean(PREF_SEND_ANALYTICS, true);
       try {
         String[] analyticsParams = BuildConfig.ANALYTICS_PARAMS.split(PROPERTIES_PARAMS_SEPARATOR);
         analyticsHelper = new AnalyticsHelperFactory().getAnalyticsHelper(this, enableAnalytics,
@@ -106,6 +105,11 @@ public class OmniNotes extends MultiDexApplication {
       } catch (AnalyticsInstantiationException | InvalidIdentifierException e) {
         analyticsHelper = new MockAnalyticsHelper();
       }
+  }
+
+  public AnalyticsHelper getAnalyticsHelper() {
+    if (analyticsHelper == null) {
+      setAnalyticsHelper()
     }
     return analyticsHelper;
   }

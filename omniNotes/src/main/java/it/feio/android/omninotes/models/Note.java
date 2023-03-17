@@ -185,4 +185,35 @@ public class Note extends BaseNote implements Parcelable {
     parcel.writeList(getAttachmentsList());
   }
 
+  public void onPrepareOptionsMenu(Menu menu) {
+
+    // Closes search view if left open in List fragment
+    MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
+    if (searchMenuItem != null) {
+      searchMenuItem.collapseActionView();
+    }
+
+    boolean newNote = get_id() == null;
+
+    menu.findItem(R.id.menu_checklist_on).setVisible(!isChecklist());
+    menu.findItem(R.id.menu_checklist_off).setVisible(isChecklist());
+    menu.findItem(R.id.menu_checklist_moveToBottom)
+        .setVisible(isChecklist() && mChecklistManager.getCheckedCount() > 0);
+    menu.findItem(R.id.menu_lock).setVisible(!isLocked());
+    menu.findItem(R.id.menu_unlock).setVisible(isLocked());
+    // If note is trashed only this options will be available from menu
+    if (isTrashed()) {
+      menu.findItem(R.id.menu_untrash).setVisible(true);
+      menu.findItem(R.id.menu_delete).setVisible(true);
+      // Otherwise all other actions will be available
+    } else {
+      // Temporary removed until fixed on Oreo and following
+      menu.findItem(R.id.menu_add_shortcut).setVisible(!newNote);
+      menu.findItem(R.id.menu_pin_note).setVisible(!newNote);
+      menu.findItem(R.id.menu_archive).setVisible(!newNote && !isArchived());
+      menu.findItem(R.id.menu_unarchive).setVisible(!newNote && isArchived());
+      menu.findItem(R.id.menu_trash).setVisible(!newNote);
+    }
+  }
+
 }

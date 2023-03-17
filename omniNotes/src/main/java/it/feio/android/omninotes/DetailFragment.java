@@ -984,34 +984,7 @@ public class DetailFragment extends BaseFragment implements OnReminderPickedList
 
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
-
-    // Closes search view if left open in List fragment
-    MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
-    if (searchMenuItem != null) {
-      searchMenuItem.collapseActionView();
-    }
-
-    boolean newNote = noteTmp.get_id() == null;
-
-    menu.findItem(R.id.menu_checklist_on).setVisible(!noteTmp.isChecklist());
-    menu.findItem(R.id.menu_checklist_off).setVisible(noteTmp.isChecklist());
-    menu.findItem(R.id.menu_checklist_moveToBottom)
-        .setVisible(noteTmp.isChecklist() && mChecklistManager.getCheckedCount() > 0);
-    menu.findItem(R.id.menu_lock).setVisible(!noteTmp.isLocked());
-    menu.findItem(R.id.menu_unlock).setVisible(noteTmp.isLocked());
-    // If note is trashed only this options will be available from menu
-    if (noteTmp.isTrashed()) {
-      menu.findItem(R.id.menu_untrash).setVisible(true);
-      menu.findItem(R.id.menu_delete).setVisible(true);
-      // Otherwise all other actions will be available
-    } else {
-      // Temporary removed until fixed on Oreo and following
-      menu.findItem(R.id.menu_add_shortcut).setVisible(!newNote);
-      menu.findItem(R.id.menu_pin_note).setVisible(!newNote);
-      menu.findItem(R.id.menu_archive).setVisible(!newNote && !noteTmp.isArchived());
-      menu.findItem(R.id.menu_unarchive).setVisible(!newNote && noteTmp.isArchived());
-      menu.findItem(R.id.menu_trash).setVisible(!newNote);
-    }
+    noteTmp.onPrepareOptionsMenu(menu);
   }
 
   @SuppressLint("NewApi")
